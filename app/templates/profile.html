@@ -1,11 +1,69 @@
 {% extends "base.html" %}
-{% block title %}Your profile{% endblock %}
+{% block title %}Account Overview{% endblock %}
 {% block content %}
-<h1>Your profile</h1>
-<dl class="profile">
-  <dt>Name</dt><dd>{{ user.full_name }}</dd>
-  <dt>Email</dt><dd>{{ user.email }}</dd>
-  <dt>Member since</dt><dd>{{ user.created_at }}</dd>
-</dl>
-<p class="muted">Order history arrives in a later stage.</p>
+
+<div class="breadcrumb-nav">
+  <a href="{{ url_for('shop.products') }}" class="breadcrumb-back">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <line x1="19" y1="12" x2="5" y2="12"></line>
+      <polyline points="12 19 5 12 12 5"></polyline>
+    </svg>
+    <span>Return to Catalogue</span>
+  </a>
+</div>
+
+<div class="profile-card">
+  <div class="profile-header">
+    <div class="profile-user-info">
+      <div class="mono-label" style="margin-bottom: 0.35rem;">Authenticated Session</div>
+      <h1>{{ user.full_name }}</h1>
+      <span class="profile-role-badge">{{ user.role }}</span>
+    </div>
+
+    <div>
+      <form method="post" action="{{ url_for('auth.logout') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button type="submit" class="btn-secondary-large" style="color: var(--status-out-stock);">
+          Log out
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <h3 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 1rem;">Account Credentials &amp; Verification</h3>
+
+  <div class="profile-metrics-grid">
+    <div class="metric-tile">
+      <div class="tile-label">Registered Email</div>
+      <div class="tile-value">{{ user.email }}</div>
+    </div>
+
+    <div class="metric-tile">
+      <div class="tile-label">Member Since</div>
+      <div class="tile-value" style="font-size: 0.95rem; font-weight: 600;">{{ user.created_at }}</div>
+    </div>
+
+    <div class="metric-tile">
+      <div class="tile-label">Session Architecture</div>
+      <div class="tile-value" style="color: var(--status-in-stock); font-size: 0.95rem;">
+        SHA-256 Hashed Server Record
+      </div>
+    </div>
+
+    <div class="metric-tile">
+      <div class="tile-label">Access Control</div>
+      <div class="tile-value" style="font-size: 0.95rem;">
+        No-Store Cache &bull; Secure Cookie
+      </div>
+    </div>
+  </div>
+
+  <div style="border-top: 1px solid var(--border-light); padding-top: 2rem;">
+    <h3 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 0.5rem;">Order History</h3>
+    <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.5;">
+      Your past order receipts, tracking numbers, and fulfillment receipts will be rendered here once Stage 5 checkout is unlocked.
+    </p>
+  </div>
+</div>
+
 {% endblock %}

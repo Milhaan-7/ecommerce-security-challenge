@@ -11,9 +11,10 @@ bp = Blueprint("shop", __name__)
 @bp.get("/products")
 def products():
     rows = get_db().execute(
-        "SELECT id, name, description, price_cents, stock FROM products ORDER BY id"
+        "SELECT id, sku, name, description, price_cents, stock FROM products ORDER BY id"
     ).fetchall()
-    return render_template("products.html", products=rows)
+    by_sku = {row["sku"]: row for row in rows}
+    return render_template("products.html", products=rows, by_sku=by_sku)
 
 
 @bp.get("/products/<int:product_id>")

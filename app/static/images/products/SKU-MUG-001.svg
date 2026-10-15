@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 380" width="100%" height="100%">
+  <defs>
+    <radialGradient id="bgGlow" cx="50%" cy="45%" r="65%">
+      <stop offset="0%" stop-color="#fffbeb"/>
+      <stop offset="60%" stop-color="#fef3c7"/>
+      <stop offset="100%" stop-color="#fde68a"/>
+    </radialGradient>
+    <linearGradient id="mugBody" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#f59e0b"/>
+      <stop offset="25%" stop-color="#fbbf24"/>
+      <stop offset="70%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#d97706"/>
+    </linearGradient>
+    <linearGradient id="ceramicSheen" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.6"/>
+      <stop offset="50%" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="coffee" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#451a03"/>
+      <stop offset="50%" stop-color="#78350f"/>
+      <stop offset="100%" stop-color="#270e02"/>
+    </linearGradient>
+    <filter id="softShadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="18" stdDeviation="20" flood-color="#78350f" flood-opacity="0.22"/>
+    </filter>
+  </defs>
+
+  <!-- Ambient Backdrop -->
+  <rect width="500" height="380" rx="20" fill="url(#bgGlow)"/>
+
+  <!-- Desk Grounding Shadow -->
+  <ellipse cx="250" cy="310" rx="130" ry="22" fill="#d97706" opacity="0.3"/>
+  <ellipse cx="250" cy="310" rx="95" ry="14" fill="#92400e" opacity="0.2"/>
+
+  <!-- Mug Handle (Back/Side) -->
+  <path d="M 295 155 C 370 155 370 235 295 235" fill="none" stroke="#d97706" stroke-width="24" stroke-linecap="round"/>
+  <path d="M 295 155 C 362 155 362 235 295 235" fill="none" stroke="#f59e0b" stroke-width="14" stroke-linecap="round"/>
+
+  <!-- Main Mug Body with Shadow -->
+  <g filter="url(#softShadow)">
+    <!-- Cylinder Base & Sides -->
+    <path d="M 175 130 L 175 260 C 175 295 325 295 325 260 L 325 130 Z" fill="url(#mugBody)"/>
+
+    <!-- Top Rim Opening -->
+    <ellipse cx="250" cy="130" rx="75" ry="24" fill="#fbbf24" stroke="#d97706" stroke-width="3"/>
+
+    <!-- Coffee Surface -->
+    <ellipse cx="250" cy="132" rx="67" ry="19" fill="url(#coffee)"/>
+    <ellipse cx="235" cy="129" rx="45" ry="10" fill="#92400e" opacity="0.4"/>
+    <ellipse cx="260" cy="135" rx="25" ry="5" fill="#fef08a" opacity="0.15"/>
+
+    <!-- Ceramic Gloss Highlight -->
+    <path d="M 185 145 C 195 200 195 240 188 265" stroke="#ffffff" stroke-width="8" stroke-linecap="round" opacity="0.45"/>
+
+    <!-- Rubber Duck Face Badge (Embossed on Mug) -->
+    <g transform="translate(250, 205)">
+      <!-- Duck Bill -->
+      <ellipse cx="0" cy="8" rx="24" ry="14" fill="#ea580c"/>
+      <ellipse cx="0" cy="4" rx="20" ry="8" fill="#f97316"/>
+      <!-- Eyes -->
+      <ellipse cx="-26" cy="-8" rx="7" ry="9" fill="#0f172a"/>
+      <circle cx="-28" cy="-10" r="3" fill="#ffffff"/>
+      <ellipse cx="26" cy="-8" rx="7" ry="9" fill="#0f172a"/>
+      <circle cx="24" cy="-10" r="3" fill="#ffffff"/>
+      <!-- Rosy Cheeks -->
+      <circle cx="-42" cy="6" r="8" fill="#f87171" opacity="0.45"/>
+      <circle cx="42" cy="6" r="8" fill="#f87171" opacity="0.45"/>
+      <!-- Developer Code Tag -->
+      <rect x="-48" y="32" width="96" height="20" rx="10" fill="#78350f" opacity="0.75"/>
+      <text x="0" y="46" font-family="ui-monospace, monospace" font-size="11" font-weight="bold" fill="#fef3c7" text-anchor="middle">&lt;rubber-duck/&gt;</text>
+    </g>
+  </g>
+
+  <!-- Gentle Aromatic Steam -->
+  <path d="M 220 100 C 210 70 235 55 225 30" fill="none" stroke="#f59e0b" stroke-width="4" stroke-linecap="round" opacity="0.5"/>
+  <path d="M 255 95 C 270 70 245 50 260 25" fill="none" stroke="#fbbf24" stroke-width="4.5" stroke-linecap="round" opacity="0.65"/>
+  <path d="M 280 102 C 290 80 275 60 285 40" fill="none" stroke="#f59e0b" stroke-width="3.5" stroke-linecap="round" opacity="0.4"/>
+</svg>

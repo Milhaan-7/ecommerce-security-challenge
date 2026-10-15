@@ -4,37 +4,119 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="csrf-token" content="{{ csrf_token() }}">
-  <title>{% block title %}Shop{% endblock %} - Security Lab Store</title>
+  <title>{% block title %}Store{% endblock %} — Security Lab Atelier</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
+  <!-- Top Global Announcement Strip -->
+  <aside class="announcement-bar">
+    <span class="badge-mono">Lab System</span>
+    <span>Complimentary workshop dispatch on all synthetic hardware &bull; Strict 127.0.0.1 isolation</span>
+  </aside>
+
+  <!-- Sticky Site Navigation Header -->
   <header class="site-header">
-    <div class="container header-inner">
-      <a class="brand" href="{{ url_for('shop.products') }}">Security Lab Store</a>
-      <nav aria-label="Main">
-        <a href="{{ url_for('shop.products') }}">Products</a>
-        <a href="{{ url_for('shop.view_cart') }}">Cart <span class="badge">{{ cart_count }}</span></a>
+    <div class="header-container">
+      <a href="{{ url_for('shop.products') }}" class="brand-group" aria-label="Security Lab Store Homepage">
+        <div class="brand-symbol">SL</div>
+        <div class="brand-text">
+          <span class="brand-name">Security Lab</span>
+          <span class="brand-tagline">Hardware // Atelier</span>
+        </div>
+      </a>
+
+      <nav class="header-nav" aria-label="Main Navigation">
+        <a href="{{ url_for('shop.products') }}">Catalogue</a>
+      </nav>
+
+      <div class="header-actions">
+        <a href="{{ url_for('shop.view_cart') }}" class="cart-button" aria-label="Shopping Cart">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <path d="M16 10a4 4 0 0 1-8 0"></path>
+          </svg>
+          <span>Cart</span>
+          <span class="badge">{{ cart_count }}</span>
+        </a>
+
         {% if current_user %}
-        <a href="{{ url_for('auth.profile') }}">Profile</a>
-        <form method="post" action="{{ url_for('auth.logout') }}" class="nav-form">
+        <a href="{{ url_for('auth.profile') }}" class="account-pill" title="Signed in as {{ current_user.email }}">
+          <span class="mono-label">Account</span>
+          <span>{{ current_user.email }}</span>
+        </a>
+        <form method="post" action="{{ url_for('auth.logout') }}" class="inline-form">
           <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-          <button type="submit" class="link-button">Log out</button>
+          <button type="submit" class="btn-text-logout">Log out</button>
         </form>
         {% else %}
-        <a href="{{ url_for('auth.login') }}">Log in</a>
-        <a href="{{ url_for('auth.register') }}">Register</a>
+        <a href="{{ url_for('auth.login') }}" class="btn-header-secondary">Log in</a>
+        <a href="{{ url_for('auth.register') }}" class="btn-header-primary">Create account</a>
         {% endif %}
-      </nav>
+      </div>
     </div>
   </header>
+
+  <!-- Main Content Stage -->
   <main class="container">
     {% for category, message in get_flashed_messages(with_categories=true) %}
     <div class="alert {{ category }}">{{ message }}</div>
     {% endfor %}
+
     {% block content %}{% endblock %}
   </main>
+
+  <!-- Editorial Brand Footer -->
   <footer class="site-footer">
-    <div class="container">Workshop demo: fictional products, mock payments only, runs on 127.0.0.1.</div>
+    <div class="footer-container">
+      <div class="footer-col">
+        <div class="brand-group" style="margin-bottom: 1rem;">
+          <div class="brand-symbol">SL</div>
+          <div class="brand-text">
+            <span class="brand-name">Security Lab</span>
+            <span class="brand-tagline">Hardware // Atelier</span>
+          </div>
+        </div>
+        <p style="font-size: 0.9rem; color: var(--text-secondary); max-width: 320px; line-height: 1.6;">
+          An experimental tactile storefront engineered to demonstrate defense-in-depth web architecture, cryptographic session isolation, and tamper-resistant state validation.
+        </p>
+      </div>
+
+      <div class="footer-col">
+        <h4>Department</h4>
+        <ul class="footer-links">
+          <li><a href="{{ url_for('shop.products') }}">All Instruments</a></li>
+          <li><a href="{{ url_for('shop.products') }}#catalogue">Workstation Gear</a></li>
+          <li><a href="{{ url_for('shop.products') }}#catalogue">Developer Apparel</a></li>
+          <li><a href="{{ url_for('shop.products') }}#catalogue">Tactile Stationery</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Lab Security</h4>
+        <ul class="footer-links">
+          <li><span style="font-size: 0.88rem; color: var(--text-secondary);">Server-Side Pricing</span></li>
+          <li><span style="font-size: 0.88rem; color: var(--text-secondary);">Scoped CSRF Tokens</span></li>
+          <li><span style="font-size: 0.88rem; color: var(--text-secondary);">Salted Scrypt Hashes</span></li>
+          <li><span style="font-size: 0.88rem; color: var(--text-secondary);">Strict SQL Parameters</span></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Environment</h4>
+        <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 0.75rem;">
+          Local development instance running on SQLite with signed session storage. Bound to localhost only.
+        </p>
+        <div style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--accent-brand); font-weight: 700;">
+          HOST: 127.0.0.1:5000 &bull; SECURE LOCAL
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div>&copy; 2026 Security Lab Store. Workshop demonstration only. Fictional inventory.</div>
+      <div>Zero external telemetry &bull; 100% Local assets</div>
+    </div>
   </footer>
 </body>
 </html>

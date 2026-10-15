@@ -1,26 +1,160 @@
 {% extends "base.html" %}
 {% block title %}{{ product.name }}{% endblock %}
 {% block content %}
-<p><a href="{{ url_for('shop.products') }}">&larr; All products</a></p>
-<section class="detail">
-  <div class="thumb large" aria-hidden="true">{{ product.name[0] }}</div>
-  <div>
-    <h1>{{ product.name }}</h1>
-    <p class="muted">SKU: {{ product.sku }}</p>
-    <p>{{ product.description }}</p>
-    <p class="price">{{ product.price_cents | money }}</p>
-    {% if product.stock > 0 %}
-    <p class="muted">{{ product.stock }} in stock</p>
-    <form method="post" action="{{ url_for('shop.add_to_cart') }}" class="inline-form">
-      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-      <input type="hidden" name="product_id" value="{{ product.id }}">
-      <label for="qty">Quantity</label>
-      <input id="qty" name="quantity" type="number" min="1" max="{{ max_qty }}" value="1" required>
-      <button type="submit">Add to cart</button>
-    </form>
-    {% else %}
-    <p class="out">Out of stock</p>
-    {% endif %}
+
+<!-- Breadcrumb Navigation -->
+<div class="breadcrumb-nav">
+  <a href="{{ url_for('shop.products') }}" class="breadcrumb-back">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <line x1="19" y1="12" x2="5" y2="12"></line>
+      <polyline points="12 19 5 12 12 5"></polyline>
+    </svg>
+    <span>Back to All Instruments</span>
+  </a>
+</div>
+
+<!-- Main Detail Showcase Layout -->
+<section class="detail-layout">
+  <!-- Left Column: Visual Showcase Gallery -->
+  <div class="detail-gallery-showcase">
+    <img src="{{ url_for('static', filename='images/products/' ~ (product.sku if product.sku else 'default') ~ '.svg') }}"
+         onerror="this.onerror=null;this.src='{{ url_for('static', filename='images/products/default.svg') }}';"
+         alt="{{ product.name }}"
+         class="detail-img-large"
+         loading="eager">
+  </div>
+
+  <!-- Right Column: Product Intelligence & Purchase Panel -->
+  <div class="detail-info-panel">
+    <div class="detail-header-meta">
+      <span class="detail-sku-badge">{{ product.sku }}</span>
+      {% if product.stock > 0 %}
+      <span class="stock-pill in-stock">{{ product.stock }} units available</span>
+      {% else %}
+      <span class="stock-pill out-stock">Depleted</span>
+      {% endif %}
+    </div>
+
+    <h1 class="detail-title">{{ product.name }}</h1>
+
+    <div class="detail-price-box">
+      <span class="detail-price">{{ product.price_cents | money }}</span>
+      {% if product.stock <= 0 %}
+      <span class="out">Out of stock</span>
+      {% endif %}
+    </div>
+
+    <p class="detail-description">{{ product.description }}</p>
+
+    <!-- Add to Cart Action Card -->
+    <div class="detail-action-card">
+      {% if product.stock > 0 %}
+      <form method="post" action="{{ url_for('shop.add_to_cart') }}" class="detail-form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="product_id" value="{{ product.id }}">
+
+        <div class="detail-form-row">
+          <div class="qty-stepper-box">
+            <label for="qty">Quantity</label>
+            <input id="qty" name="quantity" type="number" min="1" max="{{ max_qty }}" value="1" required>
+          </div>
+          <button type="submit" class="btn-add-large">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <path d="M16 10a4 4 0 0 1-8 0"></path>
+            </svg>
+            <span>Add to Cart &bull; {{ product.price_cents | money }}</span>
+          </button>
+        </div>
+      </form>
+      {% else %}
+      <div>
+        <p class="out" style="font-size: 1.1rem; margin-bottom: 0.5rem;">Out of stock</p>
+        <p style="font-size: 0.9rem; color: var(--text-secondary); margin: 0;">
+          This workshop item is currently exhausted in the database. Client-side re-order forms are automatically deactivated.
+        </p>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- Specifications & Security Guarantees -->
+    <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 0.75rem;">Technical Specifications</h3>
+    <table class="detail-specs-table">
+      <tbody>
+        <tr>
+          <td class="spec-key">Product SKU</td>
+          <td class="spec-val">{{ product.sku }}</td>
+        </tr>
+        <tr>
+          <td class="spec-key">Pricing Authority</td>
+          <td class="spec-val">Database-enforced (Client price ignored)</td>
+        </tr>
+        <tr>
+          <td class="spec-key">CSRF Protection</td>
+          <td class="spec-val">Flask-WTF Token Required</td>
+        </tr>
+        <tr>
+          <td class="spec-key">Delivery Protocol</td>
+          <td class="spec-val">Simulated Workshop Courier</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="detail-trust-pills">
+      <div class="trust-item">
+        <span class="trust-icon">&check;</span>
+        <span>Tamper-proof server pricing &bull; zero client price trust</span>
+      </div>
+      <div class="trust-item">
+        <span class="trust-icon">&check;</span>
+        <span>Parameterized SQL execution on all inventory tables</span>
+      </div>
+    </div>
   </div>
 </section>
+
+<!-- Related Studio Essentials Section -->
+<div class="section-headline-group" style="border-top: 1px solid var(--border-light); padding-top: 3rem; margin-top: 2rem;">
+  <div>
+    <h2 class="section-title">Pairs Well With</h2>
+    <p class="section-desc">Complementary developer instruments from the workshop collection.</p>
+  </div>
+</div>
+
+<div class="spotlight-strip" style="margin-bottom: 2rem;">
+  <a href="{{ url_for('shop.product_detail', product_id=1) }}" class="spotlight-card">
+    <div class="spotlight-thumb">
+      <img src="{{ url_for('static', filename='images/products/SKU-MUG-001.svg') }}" alt="Rubber Duck Mug" loading="lazy">
+    </div>
+    <div class="spotlight-info">
+      <div class="spotlight-tag">Workstation</div>
+      <div class="spotlight-title">Rubber Duck Mug</div>
+      <div class="spotlight-price">$12.99</div>
+    </div>
+  </a>
+
+  <a href="{{ url_for('shop.product_detail', product_id=5) }}" class="spotlight-card">
+    <div class="spotlight-thumb">
+      <img src="{{ url_for('static', filename='images/products/SKU-NTB-005.svg') }}" alt="Dot Grid Engineering Notebook" loading="lazy">
+    </div>
+    <div class="spotlight-info">
+      <div class="spotlight-tag">Stationery</div>
+      <div class="spotlight-title">Grid Notebook</div>
+      <div class="spotlight-price">$8.99</div>
+    </div>
+  </a>
+
+  <a href="{{ url_for('shop.product_detail', product_id=6) }}" class="spotlight-card">
+    <div class="spotlight-thumb">
+      <img src="{{ url_for('static', filename='images/products/SKU-LMP-006.svg') }}" alt="Minimalist LED Desk Lamp" loading="lazy">
+    </div>
+    <div class="spotlight-info">
+      <div class="spotlight-tag">Lighting</div>
+      <div class="spotlight-title">Desk Lamp</div>
+      <div class="spotlight-price">$39.99</div>
+    </div>
+  </a>
+</div>
+
 {% endblock %}

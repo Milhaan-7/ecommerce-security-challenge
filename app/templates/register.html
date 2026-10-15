@@ -1,22 +1,83 @@
 {% extends "base.html" %}
-{% block title %}Register{% endblock %}
+{% block title %}Create Account{% endblock %}
 {% block content %}
-<section class="form-card">
-  <h1>Create an account</h1>
-  {% for message in errors %}<div class="alert error">{{ message }}</div>{% endfor %}
-  <form method="post" action="{{ url_for('auth.register') }}">
-    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-    <label for="full_name">Full name</label>
-    <input id="full_name" name="full_name" type="text" value="{{ full_name }}" maxlength="100" autocomplete="name" required>
-    <label for="email">Email</label>
-    <input id="email" name="email" type="email" value="{{ email }}" maxlength="254" autocomplete="username" required>
-    <label for="password">Password (10 to 128 characters)</label>
-    <input id="password" name="password" type="password" minlength="10" maxlength="128" autocomplete="new-password" required>
-    <label for="confirm_password">Confirm password</label>
-    <input id="confirm_password" name="confirm_password" type="password" minlength="10" maxlength="128" autocomplete="new-password" required>
-    <button type="submit">Register</button>
-  </form>
-  <p class="muted">Already registered? <a href="{{ url_for('auth.login') }}">Log in</a>.</p>
-  <p class="muted">Use fictional data only. This is a local workshop app.</p>
-</section>
+
+<div class="auth-wrapper">
+  <div class="auth-card">
+    <div class="auth-header">
+      <div class="brand-symbol" style="margin: 0 auto 1rem; width: 40px; height: 40px; font-size: 1.1rem;">SL</div>
+      <h1>Create Account</h1>
+      <p>Register for the Security Lab workshop</p>
+    </div>
+
+    {% for message in errors %}
+    <div class="alert error">{{ message }}</div>
+    {% endfor %}
+
+    <form method="post" action="{{ url_for('auth.register') }}" class="auth-form">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+      <div class="form-field">
+        <label for="full_name">Full Name</label>
+        <input id="full_name"
+               name="full_name"
+               type="text"
+               value="{{ full_name }}"
+               maxlength="100"
+               autocomplete="name"
+               placeholder="Alex Morgan"
+               required>
+      </div>
+
+      <div class="form-field">
+        <label for="email">Email Address</label>
+        <input id="email"
+               name="email"
+               type="email"
+               value="{{ email }}"
+               maxlength="254"
+               autocomplete="username"
+               placeholder="alex@example.test"
+               required>
+      </div>
+
+      <div class="form-field">
+        <label for="password">Password (10 to 128 characters)</label>
+        <input id="password"
+               name="password"
+               type="password"
+               minlength="10"
+               maxlength="128"
+               autocomplete="new-password"
+               placeholder="At least 10 characters"
+               required>
+        <span class="form-hint">Stored as a salted scrypt hash &bull; Never plaintext</span>
+      </div>
+
+      <div class="form-field">
+        <label for="confirm_password">Confirm Password</label>
+        <input id="confirm_password"
+               name="confirm_password"
+               type="password"
+               minlength="10"
+               maxlength="128"
+               autocomplete="new-password"
+               placeholder="Confirm password"
+               required>
+      </div>
+
+      <button type="submit" class="btn-auth-submit">Create Account</button>
+    </form>
+
+    <div class="auth-footer">
+      <span>Already have an account?</span>
+      <a href="{{ url_for('auth.login') }}">Log in</a>
+    </div>
+
+    <p style="font-size: 0.78rem; color: var(--text-tertiary); text-align: center; margin-top: 1rem; line-height: 1.4;">
+      Workshop privacy note: use synthetic credentials only. All data is stored locally in SQLite.
+    </p>
+  </div>
+</div>
+
 {% endblock %}

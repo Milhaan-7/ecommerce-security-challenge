@@ -1,7 +1,14 @@
 {% extends "base.html" %}
 {% block title %}{{ title }}{% endblock %}
 {% block content %}
-<h1>{{ title }}</h1>
-<p>{{ message }}</p>
-<p><a href="{{ url_for('shop.products') }}">Back to products</a></p>
+
+<div class="empty-cart-showcase" style="border-color: var(--status-out-stock);">
+  <div class="empty-cart-icon" style="color: var(--status-out-stock);" aria-hidden="true">&excl;</div>
+  <h2>{{ title }}</h2>
+  <p>{{ message }}</p>
+  <a href="{{ url_for('shop.products') }}" class="btn-primary-large">
+    Return to Catalogue
+  </a>
+</div>
+
 {% endblock %}

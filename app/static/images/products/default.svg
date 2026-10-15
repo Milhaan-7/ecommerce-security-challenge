@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="100%" height="100%">
+  <defs>
+    <linearGradient id="defBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f8fafc"/>
+      <stop offset="100%" stop-color="#e2e8f0"/>
+    </linearGradient>
+    <filter id="defShadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#0f172a" flood-opacity="0.14"/>
+    </filter>
+  </defs>
+  <rect width="400" height="300" rx="16" fill="url(#defBg)"/>
+  <ellipse cx="200" cy="245" rx="80" ry="12" fill="#cbd5e1" opacity="0.6"/>
+  <!-- Minimalist isometric box with security badge -->
+  <g filter="url(#defShadow)" transform="translate(130, 80)">
+    <!-- Top Face -->
+    <polygon points="70,10 140,45 70,80 0,45" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1.5"/>
+    <!-- Left Face -->
+    <polygon points="0,45 70,80 70,150 0,115" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1.5"/>
+    <!-- Right Face -->
+    <polygon points="70,80 140,45 140,115 70,150" fill="#cbd5e1" stroke="#94a3b8" stroke-width="1.5"/>
+    <!-- Center Emblem on top face -->
+    <circle cx="70" cy="45" r="14" fill="#3b82f6"/>
+    <path d="M 66 45 L 69 48 L 75 42" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
+  </g>
+</svg>

@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 380" width="100%" height="100%">
+  <defs>
+    <radialGradient id="ntbGlow" cx="50%" cy="45%" r="65%">
+      <stop offset="0%" stop-color="#f8fafc"/>
+      <stop offset="60%" stop-color="#f1f5f9"/>
+      <stop offset="100%" stop-color="#e2e8f0"/>
+    </radialGradient>
+    <linearGradient id="hardcover" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e293b"/>
+      <stop offset="60%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#020617"/>
+    </linearGradient>
+    <filter id="bookDrop" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="6" dy="16" stdDeviation="18" flood-color="#0f172a" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+
+  <rect width="500" height="380" rx="20" fill="url(#ntbGlow)"/>
+  <ellipse cx="250" cy="325" rx="145" ry="20" fill="#94a3b8" opacity="0.4"/>
+
+  <!-- Isometric/Perspective Notebook Group -->
+  <g filter="url(#bookDrop)">
+    <!-- Cream Pages Thickness Block (Bottom layers) -->
+    <rect x="188" y="70" width="150" height="230" rx="12" fill="#fffbeb" stroke="#e2e8f0" stroke-width="2"/>
+    <!-- Page Lines on Edge -->
+    <line x1="337" y1="80" x2="337" y2="290" stroke="#cbd5e1" stroke-width="2"/>
+    <line x1="334" y1="80" x2="334" y2="290" stroke="#e2e8f0" stroke-width="2"/>
+
+    <!-- Premium Hardcover -->
+    <rect x="175" y="65" width="156" height="234" rx="12" fill="url(#hardcover)" stroke="#334155" stroke-width="1.5"/>
+
+    <!-- Fabric Spine -->
+    <rect x="175" y="65" width="22" height="234" rx="4" fill="#334155"/>
+    <line x1="197" y1="65" x2="197" y2="299" stroke="#475569" stroke-width="2"/>
+
+    <!-- Gold Foil Debossed Title Block -->
+    <g transform="translate(255, 135)">
+      <rect x="-42" y="-30" width="84" height="60" rx="6" fill="#1e293b" stroke="#f59e0b" stroke-width="1"/>
+      <text x="0" y="-8" font-family="ui-monospace, monospace" font-size="13" font-weight="900" fill="#fbbf24" text-anchor="middle">&lt;CODE/&gt;</text>
+      <text x="0" y="8" font-family="system-ui, sans-serif" font-size="7.5" font-weight="700" fill="#fde68a" text-anchor="middle" letter-spacing="2">DOT GRID</text>
+      <text x="0" y="20" font-family="system-ui, sans-serif" font-size="6" fill="#94a3b8" text-anchor="middle">120 GSM &#8226; A5</text>
+    </g>
+
+    <!-- Dot Grid Tactile Texture Pattern Preview Window -->
+    <pattern id="dotPatternLarge" x="0" y="0" width="10" height="10" patternUnits="userSpaceOnUse">
+      <circle cx="5" cy="5" r="1.2" fill="#64748b"/>
+    </pattern>
+    <rect x="215" y="195" width="80" height="70" rx="6" fill="#0f172a" stroke="#334155" stroke-width="1"/>
+    <rect x="220" y="200" width="70" height="60" fill="url(#dotPatternLarge)"/>
+
+    <!-- Vibrant Elastic Enclosure Band -->
+    <rect x="305" y="65" width="14" height="234" rx="3" fill="#f59e0b"/>
+    <rect x="307" y="65" width="10" height="234" fill="#fbbf24" opacity="0.6"/>
+
+    <!-- Satin Crimson Ribbon Bookmark Hanging from Bottom -->
+    <path d="M 245 299 L 245 335 L 253 325 L 261 335 L 261 299 Z" fill="#ef4444"/>
+  </g>
+</svg>

@@ -1,17 +1,59 @@
 {% extends "base.html" %}
 {% block title %}Log in{% endblock %}
 {% block content %}
-<section class="form-card">
-  <h1>Log in</h1>
-  {% if error %}<div class="alert error">{{ error }}</div>{% endif %}
-  <form method="post" action="{{ url_for('auth.login') }}">
-    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-    <label for="email">Email</label>
-    <input id="email" name="email" type="email" value="{{ email }}" maxlength="254" autocomplete="username" required>
-    <label for="password">Password</label>
-    <input id="password" name="password" type="password" maxlength="128" autocomplete="current-password" required>
-    <button type="submit">Log in</button>
-  </form>
-  <p class="muted">New here? <a href="{{ url_for('auth.register') }}">Create an account</a>.</p>
-</section>
+
+<div class="auth-wrapper">
+  <div class="auth-card">
+    <div class="auth-header">
+      <div class="brand-symbol" style="margin: 0 auto 1rem; width: 40px; height: 40px; font-size: 1.1rem;">SL</div>
+      <h1>Welcome Back</h1>
+      <p>Sign in to your Security Lab account</p>
+    </div>
+
+    {% if error %}
+    <div class="alert error">{{ error }}</div>
+    {% endif %}
+
+    <form method="post" action="{{ url_for('auth.login') }}" class="auth-form">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+      <div class="form-field">
+        <label for="email">Email address</label>
+        <input id="email"
+               name="email"
+               type="email"
+               value="{{ email }}"
+               maxlength="254"
+               autocomplete="username"
+               placeholder="name@example.test"
+               required>
+      </div>
+
+      <div class="form-field">
+        <label for="password">Password</label>
+        <input id="password"
+               name="password"
+               type="password"
+               maxlength="128"
+               autocomplete="current-password"
+               placeholder="Enter your password"
+               required>
+      </div>
+
+      <button type="submit" class="btn-auth-submit">Sign In</button>
+    </form>
+
+    <div class="auth-footer">
+      <span>Don't have an account?</span>
+      <a href="{{ url_for('auth.register') }}">Create an account</a>
+    </div>
+
+    <div style="margin-top: 1.5rem; background: var(--bg-subtle); padding: 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-light); font-size: 0.8rem; line-height: 1.5;">
+      <span class="mono-label">Workshop Sandbox Credentials</span><br>
+      <code>alice@example.test</code> &bull; <code>bob@example.test</code><br>
+      <span style="color: var(--text-tertiary);">Salted scrypt password hashing &bull; Constant-time checks</span>
+    </div>
+  </div>
+</div>
+
 {% endblock %}

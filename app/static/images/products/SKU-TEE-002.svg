@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 380" width="100%" height="100%">
+  <defs>
+    <radialGradient id="teeGlow" cx="50%" cy="45%" r="65%">
+      <stop offset="0%" stop-color="#f8fafc"/>
+      <stop offset="60%" stop-color="#e2e8f0"/>
+      <stop offset="100%" stop-color="#cbd5e1"/>
+    </radialGradient>
+    <linearGradient id="teeFabric" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#334155"/>
+      <stop offset="45%" stop-color="#1e293b"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+    <filter id="fabricShadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="16" stdDeviation="18" flood-color="#0f172a" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+
+  <rect width="500" height="380" rx="20" fill="url(#teeGlow)"/>
+  <ellipse cx="250" cy="320" rx="135" ry="20" fill="#94a3b8" opacity="0.4"/>
+
+  <!-- T-Shirt Body -->
+  <g filter="url(#fabricShadow)">
+    <!-- Main garment silhouette -->
+    <path d="M 160 85 L 105 135 L 140 170 L 165 150 L 165 300 C 215 310 285 310 335 300 L 335 150 L 360 170 L 395 135 L 340 85 C 305 110 265 115 250 115 C 235 115 195 110 160 85 Z" fill="url(#teeFabric)"/>
+
+    <!-- Ribbed Crewneck Collar -->
+    <path d="M 205 92 C 235 125 265 125 295 92" fill="none" stroke="#475569" stroke-width="8" stroke-linecap="round"/>
+    <path d="M 208 92 C 235 120 265 120 292 92" fill="none" stroke="#64748b" stroke-width="3" stroke-linecap="round"/>
+
+    <!-- Shoulder Seam Details -->
+    <line x1="160" y1="85" x2="205" y2="92" stroke="#475569" stroke-width="2.5" stroke-dasharray="4 2"/>
+    <line x1="340" y1="85" x2="295" y2="92" stroke="#475569" stroke-width="2.5" stroke-dasharray="4 2"/>
+
+    <!-- Sleeve Seams -->
+    <path d="M 165 150 L 140 170" stroke="#0f172a" stroke-width="3"/>
+    <path d="M 335 150 L 360 170" stroke="#0f172a" stroke-width="3"/>
+
+    <!-- Realistic Fabric Folds -->
+    <path d="M 172 165 C 190 220 185 260 178 290" stroke="#475569" stroke-width="3" stroke-linecap="round" opacity="0.35"/>
+    <path d="M 328 165 C 310 220 315 260 322 290" stroke="#475569" stroke-width="3" stroke-linecap="round" opacity="0.35"/>
+
+    <!-- Woven Brand Neck Tag -->
+    <rect x="236" y="96" width="28" height="18" rx="2" fill="#f8fafc"/>
+    <text x="250" y="106" font-family="sans-serif" font-size="5" font-weight="bold" fill="#0f172a" text-anchor="middle">SEC LAB</text>
+    <text x="250" y="112" font-family="sans-serif" font-size="4" fill="#64748b" text-anchor="middle">100% COTTON</text>
+
+    <!-- Chest Screenprint: Terminal Syntax Error -->
+    <g transform="translate(195, 155)">
+      <rect x="0" y="0" width="110" height="75" rx="8" fill="#090d16" stroke="#334155" stroke-width="1.5"/>
+      <!-- Window Controls -->
+      <circle cx="12" cy="12" r="3.5" fill="#f43f5e"/>
+      <circle cx="22" cy="12" r="3.5" fill="#fbbf24"/>
+      <circle cx="32" cy="12" r="3.5" fill="#10b981"/>
+      <line x1="0" y1="22" x2="110" y2="22" stroke="#1e293b" stroke-width="1"/>
+
+      <!-- Terminal Output Lines -->
+      <text x="10" y="38" font-family="ui-monospace, monospace" font-size="9" font-weight="bold" fill="#38bdf8">&gt; git commit -m &quot;fix&quot;</text>
+      <text x="10" y="52" font-family="ui-monospace, monospace" font-size="8.5" font-weight="bold" fill="#fb7185">SyntaxError: unexpected token</text>
+      <text x="10" y="65" font-family="ui-monospace, monospace" font-size="8" fill="#94a3b8">  at main.py:42:19 [&#x2588;]</text>
+    </g>
+  </g>
+</svg>

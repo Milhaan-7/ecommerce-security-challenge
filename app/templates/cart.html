@@ -1,42 +1,126 @@
 {% extends "base.html" %}
-{% block title %}Your cart{% endblock %}
+{% block title %}Shopping Cart{% endblock %}
 {% block content %}
-<h1>Your cart</h1>
+
+<div class="breadcrumb-nav">
+  <a href="{{ url_for('shop.products') }}" class="breadcrumb-back">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <line x1="19" y1="12" x2="5" y2="12"></line>
+      <polyline points="12 19 5 12 12 5"></polyline>
+    </svg>
+    <span>Continue Shopping</span>
+  </a>
+</div>
+
+<h1 class="cart-header-title">Shopping Cart</h1>
+<p style="color: var(--text-secondary); margin-bottom: 1.5rem;">Review your selected hardware instruments and order subtotal.</p>
+
 {% if lines %}
-<table class="cart">
-  <thead>
-    <tr><th>Product</th><th>Price</th><th>Quantity</th><th>Subtotal</th><th></th></tr>
-  </thead>
-  <tbody>
-  {% for line in lines %}
-    <tr>
-      <td><a href="{{ url_for('shop.product_detail', product_id=line.product.id) }}">{{ line.product.name }}</a></td>
-      <td>{{ line.product.price_cents | money }}</td>
-      <td>
-        <form method="post" action="{{ url_for('shop.update_cart') }}" class="inline-form">
+<div class="cart-layout">
+  <!-- Left Column: Itemised Product Rows -->
+  <div class="cart-items-container">
+    {% for item in lines %}
+    <div class="cart-item-card">
+      <!-- Thumbnail -->
+      <a href="{{ url_for('shop.product_detail', product_id=item.product.id) }}" class="cart-thumb-box" tabindex="-1" aria-hidden="true">
+        <img src="{{ url_for('static', filename='images/products/' ~ (item.product.sku if item.product.sku else 'default') ~ '.svg') }}"
+             onerror="this.onerror=null;this.src='{{ url_for('static', filename='images/products/default.svg') }}';"
+             alt="{{ item.product.name }}">
+      </a>
+
+      <!-- Information -->
+      <div class="cart-item-info">
+        <span class="cart-item-sku">{{ item.product.sku }}</span>
+        <a href="{{ url_for('shop.product_detail', product_id=item.product.id) }}" class="cart-item-name">
+          {{ item.product.name }}
+        </a>
+        <span class="cart-item-unit-price">{{ item.product.price_cents | money }} each</span>
+      </div>
+
+      <!-- Actions & Quantity -->
+      <div class="cart-item-actions">
+        <!-- Update Quantity Form -->
+        <form method="post" action="{{ url_for('shop.update_cart') }}" class="cart-qty-form">
           <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-          <input type="hidden" name="product_id" value="{{ line.product.id }}">
-          <input name="quantity" type="number" min="1" max="{{ [100, line.product.stock] | min }}" value="{{ line.quantity }}" required aria-label="Quantity">
-          <button type="submit">Update</button>
+          <input type="hidden" name="product_id" value="{{ item.product.id }}">
+          <input type="number"
+                 name="quantity"
+                 value="{{ item.quantity }}"
+                 min="1"
+                 max="100"
+                 class="cart-qty-input"
+                 aria-label="Quantity for {{ item.product.name }}">
+          <button type="submit" class="cart-update-btn">Update</button>
         </form>
-      </td>
-      <td>{{ line.line_total_cents | money }}</td>
-      <td>
+
+        <!-- Remove Item Form -->
         <form method="post" action="{{ url_for('shop.remove_from_cart') }}">
           <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-          <input type="hidden" name="product_id" value="{{ line.product.id }}">
-          <button type="submit" class="secondary">Remove</button>
+          <input type="hidden" name="product_id" value="{{ item.product.id }}">
+          <button type="submit" class="cart-remove-btn" title="Remove {{ item.product.name }}">Remove</button>
         </form>
-      </td>
-    </tr>
-  {% endfor %}
-  </tbody>
-  <tfoot>
-    <tr><th colspan="3">Total</th><th>{{ total_cents | money }}</th><th></th></tr>
-  </tfoot>
-</table>
-<p class="muted">Checkout (mock payment) arrives in a later stage. Totals are calculated by the server from database prices.</p>
+
+        <!-- Item Total -->
+        <div class="cart-item-total">
+          {{ item.line_total_cents | money }}
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- Right Column: Sticky Order Summary -->
+  <aside class="order-summary-card">
+    <h3 class="summary-heading">Order Summary</h3>
+
+    <div class="summary-row">
+      <span>Items Subtotal</span>
+      <span class="summary-val">{{ total_cents | money }}</span>
+    </div>
+
+    <div class="summary-row">
+      <span>Workshop Courier</span>
+      <span class="summary-val">Complimentary</span>
+    </div>
+
+    <div class="summary-row">
+      <span>Sales Tax Estimate</span>
+      <span class="summary-val">$0.00</span>
+    </div>
+
+    <div class="summary-divider"></div>
+
+    <div class="summary-total-row">
+      <span class="summary-total-label">Estimated Total</span>
+      <span class="summary-total-amount">{{ total_cents | money }}</span>
+    </div>
+
+    <button type="button" class="checkout-preview-btn" disabled>
+      Proceed to Checkout (Stage 5 Preview)
+    </button>
+    <p class="checkout-status-note">
+      Order placement and checkout workflows are safely deferred until Stage 5. Cart contents are preserved in your encrypted session.
+    </p>
+
+    <div style="border-top: 1px solid var(--border-light); margin-top: 1.5rem; padding-top: 1rem;">
+      <div class="trust-item" style="font-size: 0.8rem;">
+        <span class="trust-icon">&check;</span>
+        <span>Authoritative database pricing &bull; zero client price trust</span>
+      </div>
+    </div>
+  </aside>
+</div>
+
 {% else %}
-<p>Your cart is empty. <a href="{{ url_for('shop.products') }}">Browse products</a>.</p>
+
+<!-- Empty Cart State -->
+<div class="empty-cart-showcase">
+  <div class="empty-cart-icon" aria-hidden="true">&#128717;&#65039;</div>
+  <h2>Your cart is empty</h2>
+  <p>You have not added any instruments to your workshop cart yet. Explore our curated developer hardware and essentials.</p>
+  <a href="{{ url_for('shop.products') }}" class="btn-primary-large">Discover Essentials</a>
+</div>
+
 {% endif %}
+
 {% endblock %}

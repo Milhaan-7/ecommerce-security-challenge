@@ -1,27 +1,321 @@
 {% extends "base.html" %}
-{% block title %}Products{% endblock %}
+{% block title %}Catalogue{% endblock %}
 {% block content %}
-<h1>Products</h1>
-<div class="grid">
-  {% for p in products %}
-  <article class="card">
-    <div class="thumb" aria-hidden="true">{{ p.name[0] }}</div>
-    <h2><a href="{{ url_for('shop.product_detail', product_id=p.id) }}">{{ p.name }}</a></h2>
-    <p class="muted">{{ p.description }}</p>
-    <p class="price">{{ p.price_cents | money }}</p>
-    {% if p.stock > 0 %}
-    <form method="post" action="{{ url_for('shop.add_to_cart') }}">
-      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-      <input type="hidden" name="product_id" value="{{ p.id }}">
-      <input type="hidden" name="quantity" value="1">
-      <button type="submit">Add to cart</button>
-    </form>
-    {% else %}
-    <p class="out">Out of stock</p>
+
+<!-- Flagship Editorial Hero -->
+<section class="editorial-hero">
+  <div class="hero-content">
+    <div class="hero-pill-kicker">
+      <span>Studio Series 01</span>
+      <span>&bull;</span>
+      <span>Hardware Edition</span>
+    </div>
+    <h1 class="hero-headline">Engineered for deep focus and secure craft.</h1>
+    <p class="hero-subhead">
+      Tactile instruments, ergonomic desktop architecture, and understated developer apparel designed for modern software artisans.
+    </p>
+    <div class="hero-actions">
+      <a href="#catalogue" class="btn-primary-large">
+        <span>Explore Collection</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <polyline points="19 12 12 19 5 12"></polyline>
+        </svg>
+      </a>
+      {% set hero_item = by_sku.get('SKU-LMP-006') if by_sku else none %}
+      {% if hero_item %}
+      <a href="{{ url_for('shop.product_detail', product_id=hero_item.id) }}" class="btn-secondary-large">
+        View Flagship {{ hero_item.name }}
+      </a>
+      {% endif %}
+    </div>
+    <div class="hero-trust-bar">
+      <div class="trust-item-small">
+        <span class="dot"></span>
+        <span>Database-Priced</span>
+      </div>
+      <div class="trust-item-small">
+        <span class="dot"></span>
+        <span>CSRF Guarded</span>
+      </div>
+      <div class="trust-item-small">
+        <span class="dot"></span>
+        <span>Local Workshop</span>
+      </div>
+    </div>
+  </div>
+
+  {% if hero_item %}
+  <div class="hero-visual-frame">
+    <span class="hero-visual-badge">Featured Instrument</span>
+    <a href="{{ url_for('shop.product_detail', product_id=hero_item.id) }}" tabindex="-1" aria-hidden="true">
+      <img src="{{ url_for('static', filename='images/products/' ~ (hero_item.sku if hero_item.sku else 'default') ~ '.svg') }}"
+           alt="{{ hero_item.name }}"
+           class="hero-img-showcase"
+           loading="eager">
+    </a>
+    <div class="hero-visual-meta">
+      <div>
+        <div class="mono-label">{{ hero_item.sku }}</div>
+        <div class="hero-item-title">{{ hero_item.name }}</div>
+      </div>
+      <div class="hero-item-price">{{ hero_item.price_cents | money }}</div>
+    </div>
+  </div>
+  {% endif %}
+</section>
+
+<!-- Curated Studio Spotlight Strip -->
+<div class="section-headline-group">
+  <div>
+    <h2 class="section-title">Curated Essentials</h2>
+    <p class="section-desc">Hand-selected developer favorites from our synthetic workshop bench.</p>
+  </div>
+</div>
+
+<div class="spotlight-strip">
+  {% for sku_code, tag in [('SKU-MUG-001', 'Workstation'), ('SKU-HDP-007', 'Acoustics'), ('SKU-NTB-005', 'Stationery')] %}
+    {% set item = by_sku.get(sku_code) if by_sku else none %}
+    {% if item %}
+    <a href="{{ url_for('shop.product_detail', product_id=item.id) }}" class="spotlight-card">
+      <div class="spotlight-thumb">
+        <img src="{{ url_for('static', filename='images/products/' ~ (item.sku if item.sku else 'default') ~ '.svg') }}" alt="{{ item.name }}" loading="lazy">
+      </div>
+      <div class="spotlight-info">
+        <div class="spotlight-tag">{{ tag }}</div>
+        <div class="spotlight-title">{{ item.name }}</div>
+        <div class="spotlight-price">{{ item.price_cents | money }}</div>
+      </div>
+    </a>
     {% endif %}
+  {% endfor %}
+</div>
+
+<!-- Complete Catalogue Header & Interactive Discovery Controls -->
+<div id="catalogue" class="section-headline-group" style="margin-top: 1.5rem;">
+  <div>
+    <h2 class="section-title">The Complete Collection</h2>
+    <p class="section-desc">Verified inventory directly authoritative from the workshop database.</p>
+  </div>
+</div>
+
+<div class="catalogue-control-bar">
+  <div class="control-bar-top">
+    <!-- Live Instant Search -->
+    <div class="search-field-box">
+      <span class="search-icon-symbol" aria-hidden="true">&#128269;</span>
+      <input type="search" id="productSearch" placeholder="Search instruments by title, SKU, or keyword..." aria-label="Search instruments">
+    </div>
+
+    <!-- Sorter -->
+    <div class="sort-select-box">
+      <label for="productSort" class="sort-label">Sort by</label>
+      <select id="productSort" class="sort-dropdown">
+        <option value="featured">Featured Order</option>
+        <option value="price-asc">Price: Low to High</option>
+        <option value="price-desc">Price: High to Low</option>
+        <option value="name-asc">Alphabetical (A &ndash; Z)</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="control-bar-bottom">
+    <!-- Accessible Category Tabs -->
+    <div class="category-pills" role="tablist" aria-label="Filter items by category">
+      <button type="button" class="category-pill active" data-filter="all" role="tab" aria-selected="true">All Gear</button>
+      <button type="button" class="category-pill" data-filter="workstation" role="tab" aria-selected="false">Workstation</button>
+      <button type="button" class="category-pill" data-filter="apparel" role="tab" aria-selected="false">Apparel</button>
+      <button type="button" class="category-pill" data-filter="stationery" role="tab" aria-selected="false">Stationery</button>
+    </div>
+
+    <!-- Reactive Counter -->
+    <div id="catalogCount" class="catalogue-metric-counter">Showing 8 verified instruments</div>
+  </div>
+</div>
+
+<!-- Product Cards Grid -->
+<div class="grid" id="productGrid">
+  {% for p in products %}
+  {% set category = 'workstation' %}
+  {% if p.sku in ['SKU-TEE-002', 'SKU-BAG-004'] %}
+    {% set category = 'apparel' %}
+  {% elif p.sku in ['SKU-STK-003', 'SKU-NTB-005', 'SKU-PEN-008'] %}
+    {% set category = 'stationery' %}
+  {% endif %}
+  <article class="card"
+           data-category="{{ category }}"
+           data-name="{{ p.name | lower }}"
+           data-sku="{{ p.sku | lower }}"
+           data-desc="{{ p.description | lower }}"
+           data-price="{{ p.price_cents }}">
+    <a href="{{ url_for('shop.product_detail', product_id=p.id) }}" class="card-thumb" tabindex="-1" aria-hidden="true">
+      <img src="{{ url_for('static', filename='images/products/' ~ (p.sku if p.sku else 'default') ~ '.svg') }}"
+           onerror="this.onerror=null;this.src='{{ url_for('static', filename='images/products/default.svg') }}';"
+           alt="{{ p.name }}"
+           class="card-img"
+           loading="lazy">
+    </a>
+    <div class="card-content">
+      <div class="card-meta">
+        <span class="card-sku">{{ p.sku }}</span>
+        {% if p.stock > 0 %}
+        <span class="stock-pill in-stock">{{ p.stock }} in stock</span>
+        {% else %}
+        <span class="stock-pill out-stock">Unavailable</span>
+        {% endif %}
+      </div>
+      <h2><a href="{{ url_for('shop.product_detail', product_id=p.id) }}">{{ p.name }}</a></h2>
+      <p class="card-desc">{{ p.description }}</p>
+      <div class="card-footer">
+        <p class="price">{{ p.price_cents | money }}</p>
+        {% if p.stock > 0 %}
+        <form method="post" action="{{ url_for('shop.add_to_cart') }}">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <input type="hidden" name="product_id" value="{{ p.id }}">
+          <input type="hidden" name="quantity" value="1">
+          <button type="submit">Add to cart</button>
+        </form>
+        {% else %}
+        <p class="out">Out of stock</p>
+        {% endif %}
+      </div>
+    </div>
   </article>
   {% else %}
   <p>No products available.</p>
   {% endfor %}
+
+  <!-- Zero Results Message -->
+  <div id="noResults" class="no-results-box">
+    <h3>No matching instruments found</h3>
+    <p>Try adjusting your search query or switching to another category filter.</p>
+    <button type="button" class="btn-secondary-large" id="resetFiltersBtn">Reset All Filters</button>
+  </div>
 </div>
+
+<script>
+  (function() {
+    var searchInput = document.getElementById('productSearch');
+    var sortSelect = document.getElementById('productSort');
+    var pills = document.querySelectorAll('.category-pill');
+    var grid = document.getElementById('productGrid');
+    var cards = Array.from(document.querySelectorAll('.card[data-category]'));
+    var countEl = document.getElementById('catalogCount');
+    var noResults = document.getElementById('noResults');
+    var resetBtn = document.getElementById('resetFiltersBtn');
+
+    var currentFilter = 'all';
+    var currentQuery = '';
+    var originalOrder = cards.slice();
+
+    function updateView() {
+      var visibleCount = 0;
+
+      cards.forEach(function(card) {
+        var cat = card.getAttribute('data-category');
+        var name = card.getAttribute('data-name') || '';
+        var sku = card.getAttribute('data-sku') || '';
+        var desc = card.getAttribute('data-desc') || '';
+
+        var matchesCategory = (currentFilter === 'all' || cat === currentFilter);
+        var matchesSearch = true;
+        if (currentQuery) {
+          matchesSearch = (name.indexOf(currentQuery) !== -1 ||
+                           sku.indexOf(currentQuery) !== -1 ||
+                           desc.indexOf(currentQuery) !== -1);
+        }
+
+        if (matchesCategory && matchesSearch) {
+          card.style.display = '';
+          visibleCount++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      if (countEl) {
+        countEl.textContent = 'Showing ' + visibleCount + ' verified instrument' + (visibleCount === 1 ? '' : 's');
+      }
+
+      if (noResults) {
+        noResults.style.display = (visibleCount === 0) ? 'block' : 'none';
+      }
+    }
+
+    function applySort() {
+      var sortMode = sortSelect ? sortSelect.value : 'featured';
+      var sortedCards;
+
+      if (sortMode === 'price-asc') {
+        sortedCards = cards.slice().sort(function(a, b) {
+          return parseInt(a.getAttribute('data-price') || 0, 10) - parseInt(b.getAttribute('data-price') || 0, 10);
+        });
+      } else if (sortMode === 'price-desc') {
+        sortedCards = cards.slice().sort(function(a, b) {
+          return parseInt(b.getAttribute('data-price') || 0, 10) - parseInt(a.getAttribute('data-price') || 0, 10);
+        });
+      } else if (sortMode === 'name-asc') {
+        sortedCards = cards.slice().sort(function(a, b) {
+          return (a.getAttribute('data-name') || '').localeCompare(b.getAttribute('data-name') || '');
+        });
+      } else {
+        sortedCards = originalOrder.slice();
+      }
+
+      sortedCards.forEach(function(c) {
+        grid.appendChild(c);
+      });
+      if (noResults) {
+        grid.appendChild(noResults);
+      }
+      updateView();
+    }
+
+    // Category pill click handlers
+    pills.forEach(function(pill) {
+      pill.addEventListener('click', function() {
+        currentFilter = this.getAttribute('data-filter') || 'all';
+        pills.forEach(function(p) {
+          p.classList.remove('active');
+          p.setAttribute('aria-selected', 'false');
+        });
+        this.classList.add('active');
+        this.setAttribute('aria-selected', 'true');
+        updateView();
+      });
+    });
+
+    // Search input handler
+    if (searchInput) {
+      searchInput.addEventListener('input', function() {
+        currentQuery = this.value.trim().toLowerCase();
+        updateView();
+      });
+    }
+
+    // Sort select handler
+    if (sortSelect) {
+      sortSelect.addEventListener('change', function() {
+        applySort();
+      });
+    }
+
+    // Reset button
+    if (resetBtn) {
+      resetBtn.addEventListener('click', function() {
+        if (searchInput) searchInput.value = '';
+        currentQuery = '';
+        currentFilter = 'all';
+        pills.forEach(function(p) {
+          var isAll = (p.getAttribute('data-filter') === 'all');
+          p.classList.toggle('active', isAll);
+          p.setAttribute('aria-selected', isAll ? 'true' : 'false');
+        });
+        if (sortSelect) sortSelect.value = 'featured';
+        applySort();
+      });
+    }
+  })();
+</script>
+
 {% endblock %}
