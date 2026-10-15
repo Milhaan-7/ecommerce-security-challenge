@@ -1,0 +1,17 @@
+# Direct dependencies
+Flask==3.1.0
+Werkzeug==3.1.3
+Flask-WTF==1.2.2
+WTForms==3.2.1
+pytest==8.3.4
+
+# Transitive dependencies (pinned to the versions verified in Stage 1)
+blinker==1.9.0
+click==8.5.0
+colorama==0.4.6
+iniconfig==2.3.1
+itsdangerous==2.2.0
+Jinja2==3.1.6
+MarkupSafe==3.0.4
+packaging==26.3
+pluggy==1.6.0
