@@ -40,3 +40,19 @@ table.cart th, table.cart td { text-align: left; padding: .75rem; border-bottom:
   .thumb.large { height: 160px; }
   table.cart { display: block; overflow-x: auto; }
 }
+
+/* Authentication pages */
+.form-card { max-width: 420px; margin: 1rem auto; background: var(--card); border: 1px solid var(--border);
+  border-radius: 10px; padding: 1.5rem; }
+.form-card label { display: block; margin: .8rem 0 .25rem; font-weight: 500; }
+.form-card input { width: 100%; padding: .55rem; border: 1px solid var(--border); border-radius: 6px; font-size: 1rem; }
+.form-card button { margin-top: 1.1rem; width: 100%; }
+.alert { padding: .7rem .9rem; border-radius: 6px; margin-bottom: 1rem; border: 1px solid var(--border); background: #eef2ff; }
+.alert.error { background: #fdecea; border-color: #f5c2be; color: var(--danger); }
+.alert.success { background: #e8f5e9; border-color: #bfe3c3; color: #1b5e20; }
+.nav-form { display: inline; margin-left: 1.25rem; }
+.link-button { background: none; color: var(--brand); padding: 0; font-weight: 500; font-size: 1rem; }
+.link-button:hover { background: none; text-decoration: underline; }
+dl.profile { display: grid; grid-template-columns: max-content 1fr; gap: .4rem 1.5rem; background: var(--card);
+  border: 1px solid var(--border); border-radius: 10px; padding: 1.2rem; }
+dl.profile dt { font-weight: 600; } dl.profile dd { margin: 0; }

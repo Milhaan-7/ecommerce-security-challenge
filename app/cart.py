@@ -145,3 +145,14 @@ def remove_item(product_id_raw):
     cart = _read_cart()
     cart.pop(str(product_id), None)
     _save_cart(cart)
+
+
+def export_cart():
+    """Sanitized snapshot of the current cart (used to carry it across login)."""
+    return _read_cart()
+
+
+def restore_cart(saved):
+    """Put a previously exported cart back into the (new) session."""
+    if saved:
+        _save_cart(saved)

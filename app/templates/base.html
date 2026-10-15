@@ -14,10 +14,23 @@
       <nav aria-label="Main">
         <a href="{{ url_for('shop.products') }}">Products</a>
         <a href="{{ url_for('shop.view_cart') }}">Cart <span class="badge">{{ cart_count }}</span></a>
+        {% if current_user %}
+        <a href="{{ url_for('auth.profile') }}">Profile</a>
+        <form method="post" action="{{ url_for('auth.logout') }}" class="nav-form">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button type="submit" class="link-button">Log out</button>
+        </form>
+        {% else %}
+        <a href="{{ url_for('auth.login') }}">Log in</a>
+        <a href="{{ url_for('auth.register') }}">Register</a>
+        {% endif %}
       </nav>
     </div>
   </header>
   <main class="container">
+    {% for category, message in get_flashed_messages(with_categories=true) %}
+    <div class="alert {{ category }}">{{ message }}</div>
+    {% endfor %}
     {% block content %}{% endblock %}
   </main>
   <footer class="site-footer">

@@ -47,3 +47,16 @@ CREATE TABLE IF NOT EXISTS order_items (
 );
 
 CREATE INDEX IF NOT EXISTS idx_order_items_order ON order_items(order_id);
+
+-- Server-side login sessions. The browser cookie holds only a random token;
+-- we store a SHA-256 hash of it, so a database leak does not reveal usable tokens.
+-- Deleting a row (logout) immediately invalidates that login everywhere.
+CREATE TABLE IF NOT EXISTS auth_sessions (
+    id         INTEGER PRIMARY KEY AUTOINCREMENT,
+    token_hash TEXT    NOT NULL UNIQUE CHECK (length(token_hash) = 64),
+    user_id    INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    created_at TEXT    NOT NULL DEFAULT (datetime('now')),
+    expires_at TEXT    NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_auth_sessions_user ON auth_sessions(user_id);
