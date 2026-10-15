@@ -13,9 +13,14 @@ Completed:
 - Placeholder `workshop_vulnerable/README_DANGER.md` (no code yet).
 - Smoke tests: 5 passed (health, 404, loopback constant, non-loopback refusal, CSRF rejects tokenless POST).
 
+Git:
+- Stage 1 commit `cf56da3` created after the first attempt failed for lack of an author identity.
+- Identity set for this repository only (not global): Workshop Student <student@example.test> (placeholder).
+
 Known notes:
 - `SECRET_KEY` is a dev-only placeholder; it will be loaded from the environment in Stage 4.
 - The `run.py` server itself was not launched in Stage 1; only its host guard was tested.
+- Git prints harmless LF-to-CRLF line-ending warnings on Windows.
 
 ## Next step
 **Stage 2:** database schema (`app/schema.sql`) and synthetic seed data, with tests. Awaiting approval.
