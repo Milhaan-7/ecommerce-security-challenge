@@ -26,8 +26,9 @@ def test_run_refuses_non_loopback_host():
 def test_csrf_blocks_post_without_token(app):
     """CSRF is on by default: a POST without a token is rejected (400).
 
-    Uses a throwaway route; real routes arrive in later stages. TESTING mode
-    normally disables CSRF in Flask-WTF, so we re-enable it explicitly.
+    Uses a throwaway route; real routes arrive in later stages. CSRF stays
+    enabled under TESTING (Stage 3 tests confirm tokens are really enforced);
+    the explicit setting below just makes the intent obvious.
     """
     app.config["WTF_CSRF_ENABLED"] = True
 

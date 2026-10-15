@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+  <title>{% block title %}Shop{% endblock %} - Security Lab Store</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="{{ url_for('shop.products') }}">Security Lab Store</a>
+      <nav aria-label="Main">
+        <a href="{{ url_for('shop.products') }}">Products</a>
+        <a href="{{ url_for('shop.view_cart') }}">Cart <span class="badge">{{ cart_count }}</span></a>
+      </nav>
+    </div>
+  </header>
+  <main class="container">
+    {% block content %}{% endblock %}
+  </main>
+  <footer class="site-footer">
+    <div class="container">Workshop demo: fictional products, mock payments only, runs on 127.0.0.1.</div>
+  </footer>
+</body>
+</html>

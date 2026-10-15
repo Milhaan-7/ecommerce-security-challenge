@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Products{% endblock %}
+{% block content %}
+<h1>Products</h1>
+<div class="grid">
+  {% for p in products %}
+  <article class="card">
+    <div class="thumb" aria-hidden="true">{{ p.name[0] }}</div>
+    <h2><a href="{{ url_for('shop.product_detail', product_id=p.id) }}">{{ p.name }}</a></h2>
+    <p class="muted">{{ p.description }}</p>
+    <p class="price">{{ p.price_cents | money }}</p>
+    {% if p.stock > 0 %}
+    <form method="post" action="{{ url_for('shop.add_to_cart') }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <input type="hidden" name="product_id" value="{{ p.id }}">
+      <input type="hidden" name="quantity" value="1">
+      <button type="submit">Add to cart</button>
+    </form>
+    {% else %}
+    <p class="out">Out of stock</p>
+    {% endif %}
+  </article>
+  {% else %}
+  <p>No products available.</p>
+  {% endfor %}
+</div>
+{% endblock %}

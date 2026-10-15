@@ -29,3 +29,22 @@ def seeded_db(db):
     """Initialized database with synthetic seed data."""
     seed_db(db)
     return db
+
+@pytest.fixture
+def shop(app, seeded_db):
+    """Test client against a seeded database."""
+    return app.test_client()
+
+
+def get_csrf_token(client):
+    """Read the CSRF token the app embeds in every page (<meta name=csrf-token>)."""
+    import re
+
+    html = client.get("/products").get_data(as_text=True)
+    match = re.search(r'name="csrf-token" content="([^"]+)"', html)
+    assert match, "csrf-token meta tag missing"
+    return match.group(1)
+
+
+def product_id(db, sku):
+    return db.execute("SELECT id FROM products WHERE sku = ?", (sku,)).fetchone()["id"]

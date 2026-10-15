@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}{{ product.name }}{% endblock %}
+{% block content %}
+<p><a href="{{ url_for('shop.products') }}">&larr; All products</a></p>
+<section class="detail">
+  <div class="thumb large" aria-hidden="true">{{ product.name[0] }}</div>
+  <div>
+    <h1>{{ product.name }}</h1>
+    <p class="muted">SKU: {{ product.sku }}</p>
+    <p>{{ product.description }}</p>
+    <p class="price">{{ product.price_cents | money }}</p>
+    {% if product.stock > 0 %}
+    <p class="muted">{{ product.stock }} in stock</p>
+    <form method="post" action="{{ url_for('shop.add_to_cart') }}" class="inline-form">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <input type="hidden" name="product_id" value="{{ product.id }}">
+      <label for="qty">Quantity</label>
+      <input id="qty" name="quantity" type="number" min="1" max="{{ max_qty }}" value="1" required>
+      <button type="submit">Add to cart</button>
+    </form>
+    {% else %}
+    <p class="out">Out of stock</p>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

@@ -2,31 +2,32 @@
 
 ## Stage 0 - Plan: done (approved)
 ## Stage 1 - Scaffold: done (commits `cf56da3`, `061f46a`)
-## Stage 2 - Database schema and seed data: done
+## Stage 2 - Database schema and seed data: done (commit `1199a71`)
+## Stage 3 - Product listing, product detail, cart: done (see git log for the commit)
 
-Completed:
-- `app/schema.sql`: tables `users`, `products`, `orders`, `order_items` with foreign keys, CHECK constraints, UNIQUE keys. Money stored as integer cents.
-- `app/db.py`: per-request SQLite connection (foreign keys ON, rows as dict-like), `init_db`, CLI commands `flask --app app init-db` and `flask --app app seed-db`.
-- `app/seed.py`: 2 synthetic users (alice, bob @example.test) with scrypt-hashed passwords, and 8 fictional products (one out of stock on purpose). Safe to run twice.
-- `app/__init__.py`: registers the DB; default file is `instance/shop.db`.
-- `tests/conftest.py`: each test uses its own temporary database.
-- `tests/test_database.py`: 24 tests.
-- Verified manually: CLI created `instance/shop.db` (2 users, 8 products, `scrypt:` hashes); `git check-ignore` confirms `instance/` is ignored.
+Completed in Stage 3:
+- `app/shop.py`: routes `GET /` and `/products` (listing), `GET /products/<id>` (detail), `GET /cart`, `POST /cart/add`, `POST /cart/update`, `POST /cart/remove`.
+- `app/cart.py`: cart logic. The cart lives in the signed Flask session as `{product_id: quantity}` only (no prices stored).
+  - Strict integer parsing of product ids and quantities (rejects negatives, decimals, exponents, signs, non-ASCII digits, empty, over-long input).
+  - Quantity limits: 1 to min(100, stock). Out-of-stock products cannot be added. Cumulative quantity is also limited.
+  - Prices and totals are computed only from `products.price_cents` in the database. Fields like `price` sent by a browser are never read.
+  - Session cart is sanitized on every read (junk, negative or oversized values and unknown products are dropped).
+  - All SQL is parameterized.
+- Templates (`base`, `products`, `product_detail`, `cart`, `error`) with Jinja autoescaping (no `|safe`), CSRF token in every form, and a responsive `static/style.css`.
+- Error pages are generic and never echo user input or stack traces.
+- CSRF: Flask-WTF `CSRFProtect` still protects all POSTs; the base template also exposes the token in a `<meta name="csrf-token">` tag.
+- Tests: `tests/test_shop.py` (64 tests), plus a helper update in `tests/conftest.py`. A Stage 1 docstring in `test_smoke.py` was corrected (CSRF is not disabled by TESTING).
 
-Test results: 29 passed (24 database + 5 smoke), `pytest -v`, Python 3.13.5.
+Test results: 93 passed (`pytest -q`, Python 3.13.5): 64 shop + 24 database + 5 smoke.
 
-Design notes for later stages:
-- `products.price_cents` is the only trusted price source; `order_items.unit_price_cents` is a snapshot copied from it by the server.
-- `orders.user_id` is NOT NULL and the basis for ownership checks (`WHERE id = ? AND user_id = ?`).
-- `products.stock >= 0` is enforced by the database as a last line of defence; checkout must also check stock.
-- Deleting a user or product that has orders is blocked (ON DELETE RESTRICT).
-- No `reviews`/comments table yet. It will be added when needed for the stored-XSS demonstration (Stage 7).
+Design decisions to review:
+- The cart is kept in the session cookie rather than a database table. This needs no schema change and works before login exists. Stage 4 will harden the session (secret key from environment, cookie flags, regeneration at login). Carts are not saved across devices.
+- Stock is checked when adding/updating and clamped when displaying, but stock is NOT reserved or decremented until checkout (Stage 5).
 
 Known notes:
-- `SECRET_KEY` is a dev-only placeholder; it will be loaded from the environment in Stage 4.
-- The Flask server itself has not been launched yet; only the test client and CLI were used.
-- Seed test passwords are in `app/seed.py` as synthetic workshop credentials (only hashes are stored).
-- Git prints harmless LF-to-CRLF warnings on Windows.
+- `SECRET_KEY` is still a dev-only placeholder; the session cookie is signed but cookie flags (Secure/HttpOnly/SameSite) are not yet configured. Stage 4.
+- The Flask server has not been launched; only the test client was used.
+- No authentication, checkout or payment exists yet, by design.
 
 ## Next step
-**Stage 3:** product listing, product detail pages and the shopping cart (with tests). Awaiting approval.
+**Stage 4:** authentication (registration, login, logout), hardened sessions and profile page, with tests. Awaiting approval.

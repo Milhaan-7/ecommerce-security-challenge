@@ -4,10 +4,11 @@ Stage 1 scaffold: only a health endpoint and CSRF protection are wired up.
 """
 import os
 
-from flask import Flask, jsonify
+from flask import Flask, jsonify, render_template
 from flask_wtf.csrf import CSRFProtect
+from werkzeug.exceptions import HTTPException
 
-from . import db
+from . import cart, db, shop
 
 # Established CSRF library (Flask-WTF). Protects every state-changing request.
 csrf = CSRFProtect()
@@ -30,6 +31,26 @@ def create_app(test_config=None):
 
     csrf.init_app(app)
     db.init_app(app)
+    app.register_blueprint(shop.bp)
+
+    @app.template_filter("money")
+    def money(cents):
+        """Format integer cents as dollars, e.g. 1299 -> $12.99."""
+        return f"${cents // 100:,}.{cents % 100:02d}"
+
+    @app.context_processor
+    def inject_cart_count():
+        return {"cart_count": cart.cart_count()}
+
+    @app.errorhandler(cart.CartError)
+    def handle_cart_error(err):
+        # err.message is fixed text chosen by us, never the user's input.
+        return render_template("error.html", title="Cart error", message=err.message), err.status
+
+    @app.errorhandler(HTTPException)
+    def handle_http_error(err):
+        # Generic, static messages: no stack traces, no echoed input.
+        return render_template("error.html", title=err.name, message="Something went wrong."), err.code
 
     @app.get("/health")
     def health():
